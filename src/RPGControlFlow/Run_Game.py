@@ -5,11 +5,6 @@ from RPGRenderer.Render_Game_Objects import GameObjectRenderer
 from RPGControlFlow.Input_Handler import UserInputHandler
 from RPGControlFlow.Event_Handler import EventHandler
 
-NORM_FONT = ("Helvetica", 10)
-# Define coordinate indices to avoid magic numbers
-X_COOR_INDEX = 0 
-Y_COOR_INDEX = 1
-
 def run_game():    
     # Setup
     pygame.init()
@@ -47,7 +42,7 @@ def run_game():
     
     #create handler objects to manage different portions of the game
     userInputHandler = UserInputHandler()
-    eventHandler = EventHandler()
+    eventHandler = EventHandler(gameObjects)
     renderer = GameObjectRenderer()
     
     # -------- Main Program Loop -----------
@@ -55,8 +50,8 @@ def run_game():
         
         done = userInputHandler.handle_movement_key_input(character, done)
         
-        eventHandler.handle_game_events(character)
-     
+        eventHandler.handle_game_events()
+
         # ALL GAME LOGIC SHOULD GO ABOVE THIS COMMENT :   
         renderer.render_map(screen, gameObjects)      
         # Limit to 20 frames per second
@@ -67,5 +62,7 @@ def run_game():
     # on exit if running from IDLE.
     pygame.quit()
      
- 
 run_game()
+
+
+

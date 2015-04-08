@@ -1,48 +1,40 @@
-from test.test_idle import tk
-from tkinter import ttk
-from RPGUtils import Utility
-
-
-NORM_FONT = ("Helvetica", 10)
+from In_Game_Messages import MessagesInGame
+from RPGElements.RPGObjects.RPG_Character import RPGCharacter
+from RPGGameLogic.Collision_Handler import CollisionHandler
 # Define coordinate indices to avoid magic numbers
 X_COOR_INDEX = 0 
 Y_COOR_INDEX = 1
 
+# ALL GAME LOGIC GOES IN THIS CLASS (and potential sub-classes)
+# Handles all interactions between game objects
+# Interactions include character movement, object collisions
+# Ability interactions, player to NPC interaction, etc
 class EventHandler(object):
 
-    def __init__(self):
-        pass
-    # Handles all interactions between game objects
-    def handle_game_events(self,character):
+    def __init__(self, game_objects):
+        self.game_objects = game_objects
+        
+    
+    # Handles movement of main character after 
+    def handle_game_events(self):
+        for game_object in self.game_objects:
+            if isinstance(game_object, RPGCharacter):
+                self.handle_character_movement(game_object)
+    
+    def handle_character_movement(self,character):
         
         if character.current_hp == 0:
-            self.deathmsg("You just lost the game, play again?")
+            mig = MessagesInGame()
+            mig.death_msg("You just lost the game, play again?")
         # Move the object according to the speed vector.
-        if character.coordinates[X_COOR_INDEX] + character.speed_vector[X_COOR_INDEX] in range(0,700): 
+        collisionHandler = CollisionHandler()
+        if collisionHandler.no_collisions(character): 
             character.move_x()
-        else:
-            character.current_hp -= 1
-            print("out of bounds x-coordinates!!")
-                        
-        if character.coordinates[Y_COOR_INDEX] + character.speed_vector[Y_COOR_INDEX]  in range(0,500):   
             character.move_y()
         else:
             character.current_hp -= 1
-            print("out of bounds y-coordinates!!")
-                
-    def deathmsg(self, msg):
-        popup = tk.Tk()
-        popup.wm_title("!")
-        label = ttk.Label(popup, text=msg, font=NORM_FONT)
-        label.pack(side="top", fill="x", pady=10)
-        B1 = ttk.Button(popup, text="Yes", command = Utility.combine_funcs(popup.destroy, self.yes))
-        B1.pack()
-        B2 = ttk.Button(popup, text="No", command = self.no)
-        B2.pack()
-        popup.mainloop() 
+            print("collision!!")
     
-    def yes(self):
-        import Run_Game
-        Run_Game.run_game() 
-    def no(self):
-        exit(0)
+    
+            
+                
