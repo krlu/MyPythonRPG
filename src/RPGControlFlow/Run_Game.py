@@ -1,11 +1,9 @@
-from test.test_idle import tk
-from tkinter import ttk
 import pygame
 from RPGElements.RPGObjects.Building import RPGBuilding
 from RPGElements.RPGObjects.RPG_Character import RPGCharacter
 from RPGRenderer.Render_Game_Objects import GameObjectRenderer
 from RPGControlFlow.Input_Handler import UserInputHandler
-from RPGUtils import Utility
+from RPGControlFlow.Event_Handler import EventHandler
 
 NORM_FONT = ("Helvetica", 10)
 # Define coordinate indices to avoid magic numbers
@@ -48,14 +46,16 @@ def run_game():
     gameObjects.append(building)
     
     #create handler objects to manage different portions of the game
-    userInput = UserInputHandler()
+    userInputHandler = UserInputHandler()
+    eventHandler = EventHandler()
     renderer = GameObjectRenderer()
+    
     # -------- Main Program Loop -----------
     while not done:
         
-        done = userInput.handle_movement_key_input(character, done)
+        done = userInputHandler.handle_movement_key_input(character, done)
         
-        handle_game_events(character)
+        eventHandler.handle_game_events(character)
      
         # ALL GAME LOGIC SHOULD GO ABOVE THIS COMMENT :   
         renderer.render_map(screen, gameObjects)      
@@ -67,40 +67,5 @@ def run_game():
     # on exit if running from IDLE.
     pygame.quit()
      
-# Handles all interactions between game objects
-def handle_game_events(character):
-    
-    if character.current_hp == 0:
-        deathmsg("You just lost the game, play again?")
-    # Move the object according to the speed vector.
-    if character.coordinates[X_COOR_INDEX] + character.speed_vector[X_COOR_INDEX] in range(0,700): 
-        character.move_x()
-    else:
-        character.current_hp -= 1
-        print("out of bounds x-coordinates!!")
-                    
-    if character.coordinates[Y_COOR_INDEX] + character.speed_vector[Y_COOR_INDEX]  in range(0,500):   
-        character.move_y()
-    else:
-        character.current_hp -= 1
-        print("out of bounds y-coordinates!!")
-
-
-def deathmsg(msg):
-    popup = tk.Tk()
-    popup.wm_title("!")
-    label = ttk.Label(popup, text=msg, font=NORM_FONT)
-    label.pack(side="top", fill="x", pady=10)
-    B1 = ttk.Button(popup, text="Yes", command = Utility.combine_funcs(popup.destroy, yes))
-    B1.pack()
-    B2 = ttk.Button(popup, text="No", command = no)
-    B2.pack()
-    popup.mainloop() 
-
-def yes():
-    run_game() 
-def no():
-    exit(0)
-
  
 run_game()
