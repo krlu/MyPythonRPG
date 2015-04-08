@@ -1,5 +1,5 @@
 import pygame
-from RPGElements.RPGObjects.RPGCharacter import RPGCharacter
+from RPGElements.RPGObjects.RPG_Character import RPGCharacter
 
 # Define coordinate indices to avoid magic numbers
 X_COOR_INDEX = 0 

@@ -2,9 +2,9 @@ from test.test_idle import tk
 from tkinter import ttk
 import pygame
 from RPGElements.RPGObjects.Building import RPGBuilding
-from RPGElements.RPGObjects.RPGCharacter import RPGCharacter
+from RPGElements.RPGObjects.RPG_Character import RPGCharacter
 from RPGRenderer.RenderGameObjects import GameObjectRenderer
-from InputHandler import UserInputHandler
+from RPGControlFlow.Input_Handler import UserInputHandler
 from RPGUtils import Utility
 
 NORM_FONT = ("Helvetica", 10)

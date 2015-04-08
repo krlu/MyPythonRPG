@@ -1,4 +1,4 @@
-from RPGElements.RPGObjects.GameObject import GameObject
+from RPGElements.RPGObjects.Game_Object import GameObject
 X_COOR_INDEX = 0 
 Y_COOR_INDEX = 1
 
