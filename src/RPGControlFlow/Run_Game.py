@@ -1,14 +1,22 @@
 import pygame
+
+from RPGControlFlow.Event_Handler import EventHandler
+from RPGControlFlow.Input_Handler import UserInputHandler
 from RPGElements.RPGObjects.Building import RPGBuilding
 from RPGElements.RPGObjects.RPG_Character import RPGCharacter
+from RPGElements.RPGUniverse.Map import GameMap
 from RPGRenderer.Render_Game_Objects import GameObjectRenderer
-from RPGControlFlow.Input_Handler import UserInputHandler
-from RPGControlFlow.Event_Handler import EventHandler
+
 
 def run_game():    
     # Setup
     pygame.init()
+    
+    # Load Map object, currently loads in memory
+    # TODO: should load from database!!
     # Set the width and height of the screen [width,height]
+    
+    game_map = GameMap([1400,1000])
     size = [700, 500]
     screen = pygame.display.set_mode(size)
       
@@ -42,7 +50,7 @@ def run_game():
     
     #create handler objects to manage different portions of the game
     userInputHandler = UserInputHandler()
-    eventHandler = EventHandler(gameObjects)
+    eventHandler = EventHandler(gameObjects, game_map)
     renderer = GameObjectRenderer()
     
     # -------- Main Program Loop -----------
