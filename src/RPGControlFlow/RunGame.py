@@ -4,8 +4,8 @@ import pygame
 from RPGElements.RPGObjects.Building import RPGBuilding
 from RPGElements.RPGObjects.RPGCharacter import RPGCharacter
 from RPGRenderer.RenderGameObjects import GameObjectRenderer
+from InputHandler import UserInputHandler
 from RPGUtils import Utility
-
 
 NORM_FONT = ("Helvetica", 10)
 # Define coordinate indices to avoid magic numbers
@@ -27,27 +27,33 @@ def run_game():
     # Used to manage how fast the screen updates
     clock = pygame.time.Clock()
      
-    # Hide the mouse cursor
+    # Don't hide the mouse cursor
     pygame.mouse.set_visible(1)
      
     # Speed in pixels per frame
     # Represents character's initial vector
-    x_speed = 0
-    y_speed = 0
-    #TODO: very hacky stuff in memory, needs to persist in database! 
-    # Current position 
+    move_speed = 3
+    
+    # Current position of main character
     x_coord = 10
     y_coord = 10 
+    
+    #Create game objects (buildings, terrain, main charcters, NPCS) 
+    #TODO: very hacky stuff in memory, needs to persist in database! 
+
     gameObjects = []
-    character = RPGCharacter([x_coord, y_coord],[x_speed, y_speed])
+    character = RPGCharacter([x_coord, y_coord],move_speed)
     building = RPGBuilding([x_coord + 100, y_coord + 100])
     gameObjects.append(character)
     gameObjects.append(building)
-    #uses game renderer to create objects on screen
+    
+    #create handler objects to manage different portions of the game
+    userInput = UserInputHandler()
     renderer = GameObjectRenderer()
     # -------- Main Program Loop -----------
     while not done:
-        done = handle_user_input(character, done)
+        
+        done = userInput.handle_movement_key_input(character, done)
         
         handle_game_events(character)
      
@@ -95,41 +101,6 @@ def yes():
     run_game() 
 def no():
     exit(0)
-    
-# All event processing done in this method
-# includes key pressed for up down left right
-# TODO: handle other key pressed and mouse clicks
-def handle_user_input(character,done):
-
-    for event in pygame.event.get(): # User did something
-        if event.type == pygame.QUIT: # If user clicked close
-            done = True # Flag that we are done so we exit this loop
-            # User pressed down on a key
-         
-        elif event.type == pygame.KEYDOWN:
-            # Figure out if it was an arrow key. If so
-            # adjust speed.
-            if event.key == pygame.K_LEFT:
-                character.speed_vector[X_COOR_INDEX] =- 3
-            elif event.key == pygame.K_RIGHT:
-                character.speed_vector[X_COOR_INDEX] = 3
-            elif event.key == pygame.K_UP:
-                character.speed_vector[Y_COOR_INDEX] =- 3
-            elif event.key == pygame.K_DOWN:
-                character.speed_vector[Y_COOR_INDEX] = 3
-                  
-        # User let up on a key
-        elif event.type == pygame.KEYUP:
-            # If it is an arrow key, reset vector back to zero
-            if event.key == pygame.K_LEFT:
-                character.speed_vector[X_COOR_INDEX] = 0
-            elif event.key == pygame.K_RIGHT:
-                character.speed_vector[X_COOR_INDEX] = 0
-            elif event.key == pygame.K_UP:
-                character.speed_vector[Y_COOR_INDEX] = 0
-            elif event.key == pygame.K_DOWN:
-                character.speed_vector[Y_COOR_INDEX] = 0
-    return done
 
  
 run_game()
