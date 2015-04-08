@@ -3,7 +3,7 @@ from tkinter import ttk
 import pygame
 from RPGElements.RPGObjects.Building import RPGBuilding
 from RPGElements.RPGObjects.RPG_Character import RPGCharacter
-from RPGRenderer.RenderGameObjects import GameObjectRenderer
+from RPGRenderer.Render_Game_Objects import GameObjectRenderer
 from RPGControlFlow.Input_Handler import UserInputHandler
 from RPGUtils import Utility
 
