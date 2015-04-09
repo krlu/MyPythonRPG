@@ -39,12 +39,15 @@ def run_game():
     x_coord = 10
     y_coord = 10 
     
-    #Create game objects (buildings, terrain, main charcters, NPCS) 
+    # Current position of building
+    building_x = x_coord + 100
+    building_y = y_coord + 100
+    
+    #Create game objects (buildings, terrain, main characters, NPCS) 
     #TODO: very hacky stuff in memory, needs to persist in database! 
-
     gameObjects = []
-    character = RPGCharacter([x_coord, y_coord],move_speed)
-    building = RPGBuilding([x_coord + 100, y_coord + 100])
+    character = RPGCharacter([x_coord, y_coord],[25,25], move_speed)
+    building = RPGBuilding([building_x, building_y], [60,60])
     gameObjects.append(character)
     gameObjects.append(building)
     
@@ -55,7 +58,7 @@ def run_game():
     
     # -------- Main Program Loop -----------
     while not done:
-        
+        print(character.coordinates)
         done = userInputHandler.handle_movement_key_input(character, done)
         
         eventHandler.handle_game_events()

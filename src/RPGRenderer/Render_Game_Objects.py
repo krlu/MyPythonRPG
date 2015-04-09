@@ -22,20 +22,21 @@ class GameObjectRenderer(object):
         # First, clear the screen to WHITE. Don't put other drawing commands
         # above this, or they will be erased with this command.
         screen.fill(WHITE)
-        for gameObject in gameObjects:
-            self.render_gameObject(screen, gameObject)        
+        for game_object in gameObjects:
+            self.render_game_object(screen, game_object)        
         # Go ahead and update the screen with what we've drawn.
         pygame.display.flip()
         
         
-    # takes in a screen, gameObject, and utilizes gameObject's position to draw on screen
-    def render_gameObject(self, screen, gameObject):
-        if isinstance(gameObject, RPGCharacter):
-            x = gameObject.coordinates[X_COOR_INDEX]
-            y = gameObject.coordinates[Y_COOR_INDEX]
-            # Head
+    # takes in a screen, game_object, and utilizes game_object's position to draw on screen
+    def render_game_object(self, screen, game_object):
+        if isinstance(game_object, RPGCharacter):
+            x = game_object.coordinates[X_COOR_INDEX]
+            y = game_object.coordinates[Y_COOR_INDEX]
+            
+            pygame.draw.rect(screen, BLACK, [ x, y, game_object.hitbox[0], game_object.hitbox[1]], 0)
+            i=""" # Head
             pygame.draw.ellipse(screen, BLACK, [1 + x, y, 10, 10], 0)
-          
             # Legs
             pygame.draw.line(screen, BLACK, [5 + x, 17 + y], [10 + x, 27 + y], 2)
             pygame.draw.line(screen, BLACK, [5 + x, 17 + y], [x, 27 + y], 2)
@@ -46,14 +47,14 @@ class GameObjectRenderer(object):
             # Arms
             pygame.draw.line(screen, RED, [5 + x, 7 + y], [9 + x, 17 + y], 2)
             pygame.draw.line(screen, RED, [5 + x, 7 + y], [1 + x, 17 + y], 2)
-            pygame.draw.rect(screen, GREEN, [0,0,gameObject.current_hp,10], 0)
-            pygame.draw.rect(screen, RED, [gameObject.current_hp,0,gameObject.max_hp - gameObject.current_hp,10], 0)
+            pygame.draw.rect(screen, GREEN, [0,0,game_object.current_hp,10], 0)
+            pygame.draw.rect(screen, RED, [game_object.current_hp,0,game_object.max_hp - game_object.current_hp,10], 0)"""
             
         else:
-            x = gameObject.coordinates[X_COOR_INDEX]
-            y = gameObject.coordinates[Y_COOR_INDEX]
+            x = game_object.coordinates[X_COOR_INDEX]
+            y = game_object.coordinates[Y_COOR_INDEX]
             # building
-            pygame.draw.rect(screen, BLUE, [1 + x, y, 60, 60], 0)
+            pygame.draw.rect(screen, BLUE, [ x, y, game_object.hitbox[0], game_object.hitbox[1]], 0)
 
         
         

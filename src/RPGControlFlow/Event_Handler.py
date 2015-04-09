@@ -33,7 +33,7 @@ class EventHandler(object):
             character.move_x()
             character.move_y()
         else:
-            character.current_hp -= 1
+            character.current_hp -= 0
             print("collision!!")
             
     

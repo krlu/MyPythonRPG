@@ -4,8 +4,8 @@ Y_COOR_INDEX = 1
 
 class RPGCharacter(GameObject):
     
-    def __init__(self, coordinates, move_speed):
-        super().__init__(coordinates)
+    def __init__(self, coordinates, hitbox, move_speed):
+        super().__init__(coordinates, hitbox)
         self.move_speed = move_speed
         self.speed_vector = [0, 0]
         self.max_hp = 100
