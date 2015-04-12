@@ -49,15 +49,8 @@ class CollisionHandler(object):
     # utilize shapely API to perform collision detection
     def rectangle_collision(self, character, game_object):
         p1 = self.generate_rectangle(game_object)
-        p2 = self.generate_rectangle(character)
-        vertices = [(p2[0],p2[1]),(p2[2],p2[1]),(p2[0],p2[3]),(p2[2],p2[3])]
-        #for vertex in p1:
-        #   if self.point_inside_polygon(vertex[X_COOR_INDEX], vertex[Y_COOR_INDEX], p2):
-        #        return True
-        for vertex in vertices:
-            print(character.coordinates)
-            if self.point_inside_polygon(vertex[X_COOR_INDEX], vertex[Y_COOR_INDEX], p1, character):          
-                return True
+        if self.point_inside_polygon(p1, character):          
+            return True
         return False
     
     def generate_rectangle(self, game_object):
@@ -70,24 +63,35 @@ class CollisionHandler(object):
     # determine if a point is inside a given polygon or not
     # Polygon is a list of (x,y) pairs.
     
-    def point_inside_polygon(self, x, y, poly, character):  
-        if x + character.hitbox[0]> poly[0] and y > poly[1] and y< poly[3] and poly[2] - x > x - poly[0]:
-            print("Collision1!!")
-            character.coordinates[0] = poly[0]
-            return True
-        elif x == poly[2] and y > poly[1] and y< poly[3] and poly[2] - x < x - poly[0]:
-            print("Collision3!!")
-            character.coordinates[0] = x 
-            return True
-        elif y == poly[1] and x > poly[0] and x < poly[2]:
-            print("Collision2!!")
-            character.coordinates[1] = y - character.hitbox[1] - 0.1
-            return True
-        elif y == poly[3] and x > poly[0] and x < poly[2]:
-            print("Collision4!!")
-            character.coordinates[1] = y + 0.1
-            return True
+    def point_inside_polygon(self,poly, character): 
+        print(character.speed_vector)
+        x_left = character.coordinates[X_COOR_INDEX] + character.speed_vector[X_COOR_INDEX]
+        x_right = x_left + character.hitbox[X_COOR_INDEX]
+        y_top = character.coordinates[Y_COOR_INDEX] + character.speed_vector[Y_COOR_INDEX]
+        y_bot = y_top + character.hitbox[Y_COOR_INDEX]  
+        if abs(character.speed_vector[X_COOR_INDEX]) > 0:
+            print(str(character.speed_vector) + "------------------------------------------")
+            if (x_right > poly[0] and (abs(poly[2] - x_right) > abs(x_right - poly[0])) and
+                (self.inbetween(y_top, poly[1], poly[3]) or (self.inbetween(y_bot, poly[1], poly[3])))):
+                character.coordinates[X_COOR_INDEX] = poly[0] - character.hitbox[0]
+                return True
+            if (x_left < poly[2] and (abs(poly[2] - x_right) < abs(x_right - poly[0])) and
+                (self.inbetween(y_top, poly[1], poly[3]) or (self.inbetween(y_bot, poly[1], poly[3])))):
+                character.coordinates[X_COOR_INDEX] = poly[2]
+                return True
+        elif abs(character.speed_vector[Y_COOR_INDEX]) > 0:
+            if (y_bot > poly[1] and (abs(poly[3] - y_bot) > abs(y_bot - poly[1])) and
+                (self.inbetween(x_left, poly[0], poly[2]) or (self.inbetween(x_right, poly[0], poly[2])))):
+                character.coordinates[Y_COOR_INDEX] = poly[1] - character.hitbox[1]
+                return True
+            if (y_top < poly[3] and (abs(poly[3] - y_bot) < abs(y_bot - poly[1])) and
+                (self.inbetween(x_left, poly[0], poly[2]) or (self.inbetween(x_right, poly[0], poly[2])))):
+                character.coordinates[Y_COOR_INDEX] = poly[3]
+                return True
         return False
+    
+    def inbetween(self, x, a, b):
+        return a < x and x < b
     
     
     
