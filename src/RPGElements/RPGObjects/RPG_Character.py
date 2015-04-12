@@ -12,11 +12,11 @@ class RPGCharacter(GameObject):
         self.current_hp = 100
     
     # move in the X-direction given speed vector 
-    def move_x(self):
-        self.coordinates[X_COOR_INDEX] = self.coordinates[X_COOR_INDEX] + self.speed_vector[X_COOR_INDEX]
-        
-    # move in the Y-direction given speed vector
-    def move_y(self):
-        self.coordinates[Y_COOR_INDEX] = self.coordinates[Y_COOR_INDEX] + self.speed_vector[Y_COOR_INDEX]
+    def move(self):
+        self.coordinates[X_COOR_INDEX] += self.speed_vector[X_COOR_INDEX]
+        self.coordinates[Y_COOR_INDEX] += self.speed_vector[Y_COOR_INDEX]
 
-        
+
+    def update_coordinates(self):
+        self.coordinates[X_COOR_INDEX] = 200
+        self.coordinates[Y_COOR_INDEX] = 200

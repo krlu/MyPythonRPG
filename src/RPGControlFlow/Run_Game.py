@@ -58,7 +58,6 @@ def run_game():
     
     # -------- Main Program Loop -----------
     while not done:
-        print(character.coordinates)
         done = userInputHandler.handle_movement_key_input(character, done)
         
         eventHandler.handle_game_events()

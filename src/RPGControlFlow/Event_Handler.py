@@ -29,12 +29,11 @@ class EventHandler(object):
             
         # Check for collisions (this is a separate class)
         # Move the object according to the speed vector.
+        
         if self.collision_handler.no_collisions_with_character(character): 
-            character.move_x()
-            character.move_y()
+            character.move()
         else:
-            character.current_hp -= 0
-            print("collision!!")
+            pass
             
     
         
