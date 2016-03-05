@@ -39,6 +39,7 @@ class CollisionHandler(object):
             character.coordinates[Y_COOR_INDEX] = 500 - character.hitbox[1]
             return True
         return False
+    
     # if the map is bigger than what's shown on screen
     # we re-render the new section of the map that the player has entered
     # TODO: needs implementing!!
@@ -49,7 +50,17 @@ class CollisionHandler(object):
     # utilize shapely API to perform collision detection
     def rectangle_collision(self, character, game_object):
         p1 = self.generate_rectangle(game_object)
-        if self.point_inside_polygon(p1, character):          
+        if self.side1_intersection(p1, character):
+            print("side1")
+            return True
+        elif self.side2_intersection(p1, character):
+            print("side2")
+            return True
+        elif self.side3_intersection(p1, character):
+            print("side3")
+            return True
+        elif self.side4_intersection(p1, character):
+            print("side4")
             return True
         return False
     
@@ -60,39 +71,68 @@ class CollisionHandler(object):
         y_length = game_object.hitbox[1]
         p1 = [x, y, x+x_length, y+y_length]
         return p1
-    # determine if a point is inside a given polygon or not
-    # Polygon is a list of (x,y) pairs.
     
-    def point_inside_polygon(self,poly, character): 
-        print(character.speed_vector)
+    def side1_intersection(self,poly, character): 
         x_left = character.coordinates[X_COOR_INDEX] + character.speed_vector[X_COOR_INDEX]
         x_right = x_left + character.hitbox[X_COOR_INDEX]
         y_top = character.coordinates[Y_COOR_INDEX] + character.speed_vector[Y_COOR_INDEX]
-        y_bot = y_top + character.hitbox[Y_COOR_INDEX]  
-        if abs(character.speed_vector[X_COOR_INDEX]) > 0:
-            print(str(character.speed_vector) + "------------------------------------------")
-            if (x_right > poly[0] and (abs(poly[2] - x_right) > abs(x_right - poly[0])) and
-                (self.inbetween(y_top, poly[1], poly[3]) or (self.inbetween(y_bot, poly[1], poly[3])))):
-                character.coordinates[X_COOR_INDEX] = poly[0] - character.hitbox[0]
+        y_bot = y_top + character.hitbox[Y_COOR_INDEX] 
+        if self.point_inside_polygon(poly, x_right, y_top):
+            if(abs(x_right - poly[0]) < abs(y_top - poly[1]) and x_right - poly[0] > 0 and y_top - poly[1] > 0):                
                 return True
-            if (x_left < poly[2] and (abs(poly[2] - x_right) < abs(x_right - poly[0])) and
-                (self.inbetween(y_top, poly[1], poly[3]) or (self.inbetween(y_bot, poly[1], poly[3])))):
-                character.coordinates[X_COOR_INDEX] = poly[2]
+        elif self.point_inside_polygon(poly, x_right, y_bot):
+            if(abs(x_right - poly[0]) < abs(y_bot - poly[3]) and x_right - poly[0] > 0 and y_bot - poly[3] < 0):
+                return True                                                 
+        return False
+    
+    def side2_intersection(self,poly, character): 
+        x_left = character.coordinates[X_COOR_INDEX] + character.speed_vector[X_COOR_INDEX]
+        x_right = x_left + character.hitbox[X_COOR_INDEX]
+        y_top = character.coordinates[Y_COOR_INDEX] + character.speed_vector[Y_COOR_INDEX]
+        y_bot = y_top + character.hitbox[Y_COOR_INDEX] 
+        if self.point_inside_polygon(poly, x_left, y_bot):
+            if(x_left - poly[0] > y_bot - poly[1]):
                 return True
-        elif abs(character.speed_vector[Y_COOR_INDEX]) > 0:
-            if (y_bot > poly[1] and (abs(poly[3] - y_bot) > abs(y_bot - poly[1])) and
-                (self.inbetween(x_left, poly[0], poly[2]) or (self.inbetween(x_right, poly[0], poly[2])))):
-                character.coordinates[Y_COOR_INDEX] = poly[1] - character.hitbox[1]
+        elif self.point_inside_polygon(poly, x_right, y_bot):
+            if(x_right - poly[2] > y_bot - poly[1]):
+                return True                                                 
+        return False
+    def side3_intersection(self,poly, character): 
+        x_left = character.coordinates[X_COOR_INDEX] + character.speed_vector[X_COOR_INDEX]
+        x_right = x_left + character.hitbox[X_COOR_INDEX]
+        y_top = character.coordinates[Y_COOR_INDEX] + character.speed_vector[Y_COOR_INDEX]
+        y_bot = y_top + character.hitbox[Y_COOR_INDEX] 
+        if self.point_inside_polygon(poly, x_left, y_top):
+            if(x_left - poly[2] < y_top - poly[1]):
                 return True
-            if (y_top < poly[3] and (abs(poly[3] - y_bot) < abs(y_bot - poly[1])) and
-                (self.inbetween(x_left, poly[0], poly[2]) or (self.inbetween(x_right, poly[0], poly[2])))):
-                character.coordinates[Y_COOR_INDEX] = poly[3]
+        elif self.point_inside_polygon(poly, x_left, y_bot):
+            if(x_left - poly[2] < y_bot - poly[3]):                
+                return True                                                 
+        return False
+    def side4_intersection(self,poly, character): 
+        x_left = character.coordinates[X_COOR_INDEX] + character.speed_vector[X_COOR_INDEX]
+        x_right = x_left + character.hitbox[X_COOR_INDEX]
+        y_top = character.coordinates[Y_COOR_INDEX] + character.speed_vector[Y_COOR_INDEX]
+        y_bot = y_top + character.hitbox[Y_COOR_INDEX] 
+        if self.point_inside_polygon(poly, x_left, y_top):
+            if(x_left - poly[0] > y_top - poly[1]):               
                 return True
+        elif self.point_inside_polygon(poly, x_right, y_top):
+            if(x_right - poly[2] > y_top - poly[1]):               
+                return True                                                 
         return False
     
     def inbetween(self, x, a, b):
-        return a < x and x < b
+        return a < x and x < b   
     
-    
-    
-    
+    def point_inside_polygon(self,poly, x,y): 
+        return self.inbetween(x, poly[0], poly[2]) and self.inbetween(y, poly[1], poly[3])
+
+
+
+
+
+
+
+
+
